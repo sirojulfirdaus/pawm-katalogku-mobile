@@ -1,2 +1,0 @@
-# pawm-katalogku-mobile
-SOON

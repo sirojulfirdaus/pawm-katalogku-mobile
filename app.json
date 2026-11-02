@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "KatalogKu",
+    "slug": "katalogku",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "plugins": [
+      "expo-font",
+      "expo-status-bar"
+    ]
+  }
+}

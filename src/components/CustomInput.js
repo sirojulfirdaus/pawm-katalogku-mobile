@@ -4,12 +4,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { COLORS } from '../theme/colors';
 
 /**
- * @param {import('react-native').TextInputProps & { label?: string, error?: string, icon?: keyof typeof Ionicons.glyphMap }} props
+ * @param {import('react-native').TextInputProps & { label?: string, error?: string, icon?: keyof typeof Ionicons.glyphMap, compact?: boolean }} props
  */
 export default function CustomInput({
   label,
   error,
   icon,
+  compact = false,
   style,
   placeholderTextColor = COLORS.muted,
   selectionColor = COLORS.primary,
@@ -19,11 +20,17 @@ export default function CustomInput({
     <View style={styles.wrapper}>
       {label ? <Text style={styles.label}>{label}</Text> : null}
 
-      <View style={[styles.inputContainer, error && styles.inputError]}>
+      <View
+        style={[
+          styles.inputContainer,
+          compact && styles.compactContainer,
+          error && styles.inputError,
+        ]}
+      >
         {icon ? (
           <Ionicons
             name={icon}
-            size={20}
+            size={compact ? 24 : 20}
             color={COLORS.muted}
             style={styles.icon}
           />
@@ -32,7 +39,7 @@ export default function CustomInput({
         <TextInput
           accessibilityLabel={label}
           {...rest}
-          style={[styles.input, style]}
+          style={[styles.input, compact && styles.compactInput, style]}
           placeholderTextColor={placeholderTextColor}
           selectionColor={selectionColor}
         />
@@ -71,6 +78,15 @@ const styles = StyleSheet.create({
 
   inputError: {
     borderColor: COLORS.error,
+  },
+  compactContainer: {
+    minHeight: 44,
+    height: 44,
+    borderRadius: 8,
+  },
+  compactInput: {
+    paddingVertical: 0,
+    fontSize: 14,
   },
 
   icon: {

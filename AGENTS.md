@@ -1,4 +1,4 @@
-This is an Expo/React Native mobile application. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
+This is a JavaScript Expo/React Native mobile application. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
 
 ## Expo has changed — do not trust your training data
 
@@ -10,24 +10,28 @@ Expo ships breaking changes every SDK release. APIs you remember are likely rena
 
 ## Commands
 
-Use `bunx` instead of `npx` if the project uses bun (`bun.lock` present).
+This repository uses npm (`package-lock.json`). Use `npx expo install` for Expo-supported dependencies so Expo selects SDK-compatible versions.
 
 ```bash
-npx expo install <package>  # ALWAYS use instead of npm/yarn/pnpm/bun add — resolves SDK-compatible versions
+npx expo install <package>  # install an Expo-supported dependency when needed
 npx expo start              # start the dev server
-npx expo lint               # lint
-npx tsc --noEmit            # typecheck
-npx expo-doctor             # diagnose dependency and config issues
-npx expo install --fix      # fix incompatible package versions
+npx expo install --check    # check dependency versions
+npx expo-doctor             # diagnose dependency and config issues when available
 ```
 
-Run lint and typecheck before declaring any task done.
+Run lint and typecheck before declaring implementation work done when the required tooling and configuration are available: use `npx expo lint` for a configured ESLint setup and `npx tsc --noEmit` for a configured TypeScript or JavaScript typecheck. This JavaScript project currently has no local ESLint or TypeScript setup; do not assume either command is ready or let `expo lint` install packages or create configuration unexpectedly. Use an appropriate available alternative and report any checks that could not run. When dependency validation is relevant, use `npx expo install --check` or Expo Doctor; do not run `npx expo install --fix` without a technical need because it changes dependencies.
 
 ## Navigation & Routing
 
-- Use **Expo Router** for all navigation. Routes live in `src/app/` — every file there is a screen, `_layout.tsx` files define navigators. Keep non-route code (components, hooks, utils) outside `src/app/`.
-- Import `Link`, `router`, and `useLocalSearchParams` from `expo-router`.
-- Docs: https://docs.expo.dev/router/introduction.md
+This project follows the PAWM course architecture.
+
+- Use React Navigation, not Expo Router. Do not create `src/app/` or `_layout.tsx` files, or change the entry point to Expo Router.
+- Module 4: Implement responsive `src/screens/HomeScreen.js` and `src/screens/DetailScreen.js` to match Figma; use `App.js` temporarily to test both layouts.
+- Module 5: Implement navigation in `src/navigation/AppNavigator.js` using `@react-navigation/native`, `@react-navigation/native-stack`, and `@react-navigation/bottom-tabs`.
+- Navigation structure:
+  - Stack: Main (TabNavigator), Detail, Tentang.
+  - Tabs: Beranda, Favorit, Profil, Keranjang.
+- Module 6: Use `src/context/`, `src/hooks/`, and `src/utils/` for favorites with Context API, form management, and validation.
 
 ## Building with EAS
 
@@ -37,5 +41,9 @@ Docs: https://docs.expo.dev/eas/index.md
 ## Rules
 
 - If `ios/` and `android/` directories do not exist, they are generated (Continuous Native Generation). Never create or edit them by hand — configure native behavior in `app.json` and config plugins.
-- Expo Go only includes its bundled native modules. After adding a library with native code, the app needs a development build: `npx expo run:ios|android` locally, or `eas build --profile development`.
+- Expo Go supports native libraries bundled with it. A development build is required when a needed native module or native configuration is not supported by Expo Go; use `npx expo run:ios|android` locally or `eas build --profile development`.
 - Prefer recommended Expo modules over third-party libraries, and check your available skills before adding dependencies. Docs: https://docs.expo.dev/versions/latest/index.md
+- Preserve the KatalogKu design system and fonts from the Module 1 Figma design; reuse the Module 3 components.
+- Keep the existing repository and architecture. Do not create a new Expo project or redesign approved UI.
+- Prioritize mandatory requirements in the practicum slides; do not add features outside the current module.
+- Do not change `app.json`, dependencies, or the entry point without a necessary technical reason.

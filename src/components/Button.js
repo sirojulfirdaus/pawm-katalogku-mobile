@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import { COLORS } from '../theme/colors';
 
 /**
- * @param {{ title: string, onPress?: import('react-native').PressableProps['onPress'], variant?: 'primary' | 'outline' | 'danger', disabled?: boolean }} props
+ * @param {{ title: string, onPress?: import('react-native').PressableProps['onPress'], variant?: 'primary' | 'primaryDark' | 'outline' | 'danger', disabled?: boolean }} props
  */
 export default function Button({
   title,
@@ -12,6 +12,7 @@ export default function Button({
 }) {
   const isOutline = variant === 'outline';
   const isDanger = variant === 'danger';
+  const isPrimaryDark = variant === 'primaryDark';
 
   return (
     <Pressable
@@ -22,6 +23,7 @@ export default function Button({
       style={({ pressed }) => [
         styles.base,
         isOutline ? styles.outline : isDanger ? styles.danger : styles.primary,
+        isPrimaryDark && styles.primaryDark,
         pressed && !disabled && styles.pressed,
         disabled && styles.disabled,
       ]}
@@ -29,6 +31,7 @@ export default function Button({
       <Text
         style={[
           styles.text,
+          isPrimaryDark && styles.textPrimaryDark,
           isOutline ? styles.textOutline : styles.textFilled,
         ]}
       >
@@ -50,6 +53,14 @@ const styles = StyleSheet.create({
 
   primary: {
     backgroundColor: COLORS.primary,
+  },
+  primaryDark: {
+    backgroundColor: COLORS.primaryDark,
+    borderRadius: 10,
+  },
+  textPrimaryDark: {
+    fontSize: 14,
+    lineHeight: 21,
   },
 
   outline: {

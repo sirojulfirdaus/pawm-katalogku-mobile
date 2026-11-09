@@ -5,7 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { COLORS } from '../theme/colors';
 
 /**
- * @param {{ title: string, price: number | string, image?: string, rating?: number, discount?: number, onPress?: import('react-native').PressableProps['onPress'] }} props
+ * @param {{ title: string, price: number | string, image?: string, rating?: number, discount?: number, onPress?: import('react-native').PressableProps['onPress'], compact?: boolean }} props
  */
 export default function Card({
   title,
@@ -14,6 +14,7 @@ export default function Card({
   rating,
   discount,
   onPress,
+  compact = false,
 }) {
   const [failedImage, setFailedImage] = useState('');
   const hasImage = Boolean(image) && failedImage !== image;
@@ -22,9 +23,15 @@ export default function Card({
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+      style={({ pressed }) => [
+        styles.card,
+        compact && styles.compactCard,
+        pressed && styles.pressed,
+      ]}
     >
-      <View style={styles.imageContainer}>
+      <View
+        style={[styles.imageContainer, compact && styles.compactImageContainer]}
+      >
         {hasImage ? (
           <Image
             key={image}
@@ -35,9 +42,20 @@ export default function Card({
             resizeMode="cover"
           />
         ) : (
-          <View style={styles.placeholder}>
-            <Ionicons name="image-outline" size={32} color={COLORS.muted} />
-            <Text style={styles.placeholderText}>Gambar tidak tersedia</Text>
+          <View
+            style={[styles.placeholder, compact && styles.compactPlaceholder]}
+          >
+            {!compact && (
+              <Ionicons name="image-outline" size={32} color={COLORS.muted} />
+            )}
+            <Text
+              style={[
+                styles.placeholderText,
+                compact && styles.compactPlaceholderText,
+              ]}
+            >
+              {compact ? 'Placeholder gambar' : 'Gambar tidak tersedia'}
+            </Text>
           </View>
         )}
 
@@ -48,12 +66,17 @@ export default function Card({
         )}
       </View>
 
-      <View style={styles.body}>
-        <Text style={styles.title} numberOfLines={2}>
+      <View style={[styles.body, compact && styles.compactBody]}>
+        <Text
+          style={[styles.title, compact && styles.compactTitle]}
+          numberOfLines={2}
+        >
           {title}
         </Text>
 
-        <Text style={styles.price}>{formatPrice(price)}</Text>
+        <Text style={[styles.price, compact && styles.compactPrice]}>
+          {formatPrice(price)}
+        </Text>
 
         {rating != null && (
           <View style={styles.ratingRow}>
@@ -91,6 +114,33 @@ const styles = StyleSheet.create({
 
   pressed: {
     opacity: 0.8,
+  },
+  compactCard: {
+    flex: 0,
+    height: 214,
+    borderRadius: 10,
+  },
+  compactImageContainer: {
+    flex: 1,
+    aspectRatio: undefined,
+  },
+  compactPlaceholder: {
+    alignItems: 'flex-start',
+  },
+  compactPlaceholderText: {
+    textAlign: 'left',
+  },
+  compactBody: {
+    height: 88,
+    paddingVertical: 6,
+    gap: 3,
+  },
+  compactTitle: {
+    minHeight: 36,
+    lineHeight: 18,
+  },
+  compactPrice: {
+    lineHeight: 18,
   },
 
   imageContainer: {

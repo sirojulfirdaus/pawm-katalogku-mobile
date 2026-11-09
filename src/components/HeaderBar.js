@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
 
 /**
- * @param {{ title: string, subtitle?: string, onBack?: import('react-native').PressableProps['onPress'], includeTopInset?: boolean }} props
+ * @param {{ title: string, subtitle?: string, onBack?: import('react-native').PressableProps['onPress'], includeTopInset?: boolean, variant?: 'default' | 'primary' | 'detail' }} props
  */
 export default function HeaderBar({
   title,
@@ -13,19 +13,23 @@ export default function HeaderBar({
   onBack,
   // Disable only for inline previews or a parent that already handles the top inset.
   includeTopInset = true,
+  variant = 'default',
 }) {
   const insets = useSafeAreaInsets();
+  const isPrimary = variant === 'primary' || variant === 'detail';
+  const isDetail = variant === 'detail';
 
   return (
     <View
       style={[
         styles.container,
+        isPrimary && styles.primaryContainer,
         {
-          paddingTop: (includeTopInset ? insets.top : 0) + 8,
+          paddingTop: (includeTopInset ? insets.top : 0) + (isPrimary ? 0 : 8),
         },
       ]}
     >
-      <View style={styles.topRow}>
+      <View style={[styles.topRow, isPrimary && styles.primaryRow]}>
         {onBack ? (
           <Pressable
             onPress={onBack}
@@ -34,22 +38,36 @@ export default function HeaderBar({
             hitSlop={4}
             style={({ pressed }) => [
               styles.backButton,
+              isDetail && styles.detailBackButton,
               pressed && styles.backButtonPressed,
             ]}
           >
-            <Ionicons name="arrow-back" size={24} color={COLORS.text} />
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              color={isPrimary ? COLORS.surface : COLORS.text}
+            />
           </Pressable>
         ) : null}
 
         <Text
-          style={[styles.title, onBack && styles.titleWithBack]}
+          style={[
+            styles.title,
+            isPrimary && styles.primaryTitle,
+            isDetail && styles.detailTitle,
+            onBack && styles.titleWithBack,
+          ]}
           numberOfLines={1}
         >
           {title}
         </Text>
       </View>
 
-      {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+      {subtitle ? (
+        <Text style={[styles.subtitle, isPrimary && styles.primarySubtitle]}>
+          {subtitle}
+        </Text>
+      ) : null}
     </View>
   );
 }
@@ -59,6 +77,28 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     paddingHorizontal: 16,
     paddingBottom: 12,
+  },
+  primaryContainer: {
+    backgroundColor: COLORS.primaryDark,
+    paddingBottom: 0,
+  },
+  primaryRow: {
+    minHeight: 56,
+  },
+  primaryTitle: {
+    color: COLORS.surface,
+    fontSize: 24,
+    lineHeight: 30,
+  },
+  primarySubtitle: {
+    color: COLORS.surface,
+  },
+  detailBackButton: {
+    marginLeft: 0,
+  },
+  detailTitle: {
+    fontSize: 22,
+    lineHeight: 28,
   },
 
   topRow: {

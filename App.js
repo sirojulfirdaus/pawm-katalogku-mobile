@@ -5,6 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import AppNavigator from './src/navigation/AppNavigator';
+import { FavoritesProvider } from './src/context/FavoritesContext';
 import { COLORS } from './src/theme/colors';
 
 export default function App() {
@@ -19,7 +20,9 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar style="light" />
       {fontsLoaded ? (
-        <AppNavigator />
+        <FavoritesProvider>
+          <AppNavigator />
+        </FavoritesProvider>
       ) : (
         <View style={styles.loading}>
           {fontError ? (

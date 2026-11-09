@@ -5,11 +5,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../components/Button';
 import HeaderBar from '../components/HeaderBar';
 import { COLORS } from '../theme/colors';
+import { useFavorites } from '../context/FavoritesContext';
 
 /**
- * @param {{ product?: (typeof import('../data/dummy').products)[number] | null, onBack?: () => void, onFavoritePress?: (product: (typeof import('../data/dummy').products)[number]) => void }} props
+ * @param {{ product?: (typeof import('../data/dummy').products)[number] | null, onBack?: () => void }} props
  */
-export default function DetailScreen({ product, onBack, onFavoritePress }) {
+export default function DetailScreen({ product, onBack }) {
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [failedImage, setFailedImage] = useState('');
   const image = product?.thumbnail;
   const hasImage = Boolean(image) && image !== failedImage;
@@ -60,12 +62,13 @@ export default function DetailScreen({ product, onBack, onFavoritePress }) {
           </ScrollView>
           <View style={styles.action}>
             <Button
-              title="Tambah ke Favorit"
-              variant="primaryDark"
-              onPress={
-                onFavoritePress ? () => onFavoritePress(product) : undefined
+              title={
+                isFavorite(product.id)
+                  ? 'Hapus dari Favorit'
+                  : 'Tambah ke Favorit'
               }
-              disabled={!onFavoritePress}
+              variant={isFavorite(product.id) ? 'outline' : 'primaryDark'}
+              onPress={() => toggleFavorite(product)}
             />
           </View>
         </>

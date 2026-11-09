@@ -1,4 +1,3 @@
-import { Alert } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -11,6 +10,7 @@ import ProfilScreen from '../screens/ProfilScreen';
 import CartScreen from '../screens/CartScreen';
 import AboutScreen from '../screens/AboutScreen';
 import { COLORS } from '../theme/colors';
+import { useFavorites } from '../context/FavoritesContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -29,6 +29,8 @@ function DetailRoute({ navigation, route }) {
   const candidate = route.params?.product;
   const product =
     candidate &&
+    typeof candidate.id === 'string' &&
+    candidate.id.length > 0 &&
     typeof candidate.title === 'string' &&
     typeof candidate.price === 'number' &&
     Number.isFinite(candidate.price) &&
@@ -39,21 +41,11 @@ function DetailRoute({ navigation, route }) {
       ? candidate
       : null;
 
-  return (
-    <DetailScreen
-      product={product}
-      onBack={() => navigation.goBack()}
-      onFavoritePress={() =>
-        Alert.alert(
-          'Favorit',
-          'Fitur Favorit akan diimplementasikan pada Modul 6.',
-        )
-      }
-    />
-  );
+  return <DetailScreen product={product} onBack={() => navigation.goBack()} />;
 }
 
 function MainTabs() {
+  const { favorites } = useFavorites();
   return (
     <Tab.Navigator
       initialRouteName="Beranda"
@@ -81,7 +73,11 @@ function MainTabs() {
       })}
     >
       <Tab.Screen name="Beranda" component={BerandaRoute} />
-      <Tab.Screen name="Favorit" component={FavoritScreen} />
+      <Tab.Screen
+        name="Favorit"
+        component={FavoritScreen}
+        options={{ tabBarBadge: favorites.length || undefined }}
+      />
       <Tab.Screen name="Profil" component={ProfilScreen} />
       <Tab.Screen name="Keranjang" component={CartScreen} />
     </Tab.Navigator>

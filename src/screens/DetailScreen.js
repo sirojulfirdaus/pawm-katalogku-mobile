@@ -16,7 +16,11 @@ export default function DetailScreen({ product, onBack, onFavoritePress }) {
 
   return (
     <SafeAreaView style={styles.screen} edges={['left', 'right', 'bottom']}>
-      <HeaderBar title="Detail Produk" variant="detail" onBack={onBack} />
+      <HeaderBar
+        title={product?.title || 'Detail Produk'}
+        variant="detail"
+        onBack={onBack}
+      />
       {product ? (
         <>
           <ScrollView

@@ -53,7 +53,7 @@ export default function HomeScreen({ onProductPress }) {
   }
 
   return (
-    <SafeAreaView style={styles.screen} edges={['left', 'right', 'bottom']}>
+    <SafeAreaView style={styles.screen} edges={['left', 'right']}>
       <HeaderBar title="KatalogKu" variant="primary" />
       <View style={styles.searchBackdrop}>
         <CustomInput
